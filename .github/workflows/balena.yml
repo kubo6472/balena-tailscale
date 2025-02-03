@@ -5,24 +5,15 @@ on:
     types: [opened, synchronize, closed]
     branches:
       - main
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
-      matrix:
-        fleet:
-          [
-            klutchell_blocks/tailscale-aarch64,
-            klutchell_blocks/tailscale-amd64,
-            klutchell_blocks/tailscale-armv7hf,
-          ]
-
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: balena-io/deploy-to-balena-action@72b7652cd8b4b0b49376f60fe790eef9ba76e3f0 # v2.0.74
         with:
-          balena_token: ${{ secrets.BALENA_API_KEY }}
-          fleet: ${{ matrix.fleet }}
+          balena_token: ${{ secrets.BALENA_TOKEN }}
+          fleet: gh_kubo6472/balena-tailscale
           create_tag: true
