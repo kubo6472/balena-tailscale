@@ -2,6 +2,7 @@ version: "2.1"
 
 volumes:
   state: {}
+  usdata: {}
 
 services:
   tailscale:
@@ -21,3 +22,10 @@ services:
     tmpfs:
       - /tmp
       - /var/run/
+  upsnap:
+    container_name: upsnap
+    image: seriousm4x/upsnap:5
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - usdata:/app/pb_data
