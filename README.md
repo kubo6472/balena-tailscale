@@ -54,6 +54,8 @@ services:
       - /var/run/
 ```
 
+You generate and then specify the TS_AUTH_KEY using env vars found below. Use TS_ROUTES to utilize as a regular VPN in CG-NAT scenarios.
+
 ## Customization
 
 ### Environment Variables
