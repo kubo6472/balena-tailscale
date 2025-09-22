@@ -4,57 +4,7 @@ Add your device to your [Tailscale](https://tailscale.com/) network with this bl
 
 ## Usage
 
-To use this block, add a service in your `docker-compose.yml` file as shown below.
-
-```yml
-volumes:
-  ...
-  state: {}
-
-services:
-  ...
-  tailscale:
-    # where <arch> is one of aarch64, armv7hf or amd64
-    image: bh.cr/klutchell_blocks/tailscale-<arch>
-    network_mode: host
-    restart: on-failure
-    volumes:
-      - state:/var/lib/tailscale
-    labels:
-      - io.balena.features.kernel-modules=1
-    cap_add:
-      - net_admin
-      - net_raw
-      - sys_module
-    tmpfs:
-      - /tmp
-      - /var/run/
-```
-
-To pin to a specific version of this block use:
-
-```yml
-services:
-  ...
-  tailscale:
-    # where <version> is the release semver or release commit ID
-    image: bh.cr/klutchell_blocks/tailscale-<arch>/<version>
-    network_mode: host
-    restart: on-failure
-    volumes:
-      - state:/var/lib/tailscale
-    labels:
-      - io.balena.features.kernel-modules=1
-    cap_add:
-      - net_admin
-      - net_raw
-      - sys_module
-    tmpfs:
-      - /tmp
-      - /var/run/
-```
-
-## Customization
+You generate and then specify the TS_AUTH_KEY using env vars found below. Use TS_ROUTES to utilize as a regular VPN in CG-NAT scenarios.
 
 ### Environment Variables
 
