@@ -29,3 +29,10 @@ services:
     restart: unless-stopped
     volumes:
       - usdata:/app/pb_data
+    environment:
+      - TZ=Europe/Bratislava
+      - UPSNAP_SCAN_RANGE=192.168.1.0/24
+      - UPSNAP_PING_PRIVILEGED=true
+    healthcheck:
+      test: curl -fs "http://localhost:8090/api/health" || exit 1
+      interval: 10s
