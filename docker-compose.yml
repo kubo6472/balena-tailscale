@@ -1,7 +1,7 @@
 version: "2.1"
 
 volumes:
-  ts-state: {}
+  state: {}
   usdata: {}
 
 services:
@@ -14,11 +14,13 @@ services:
     devices:
       - /dev/net/tun
     volumes:
-      - ts-state:/var/lib/tailscale
+      - state:/var/lib/tailscale   # or `state:/var/lib/tailscale` on the home compose
     labels:
       - io.balena.features.kernel-modules=1
+      - io.balena.features.procfs=1
     cap_add:
       - net_admin
+      - net_raw
       - sys_module
     tmpfs:
       - /tmp
