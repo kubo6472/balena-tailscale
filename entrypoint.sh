@@ -34,9 +34,6 @@ if [ -z "${TS_AUTH_KEY:-}" ] && [ -z "${TS_AUTHKEY:-}" ]; then
     exit 0
 fi
 
-# WireGuard may be compiled into the kernel rather than a loadable
-# module, in which case modprobe reports failure even though support
-# exists — so don't gate kernel networking on modprobe's exit code.
 modprobe wireguard 2>/dev/null || true
 dmesg | grep -i wireguard || true
 export TS_USERSPACE="${TS_USERSPACE:-false}"
@@ -48,6 +45,17 @@ modprobe tun || true
 # create device node
 mkdir -p /dev/net
 [ ! -c /dev/net/tun ] && mknod /dev/net/tun c 10 200
+
+# Enable IP forwarding for subnet routing.
+echo 1 > /proc/sys/net/ipv4/ip_forward 2>/dev/null || true
+[ -e /proc/sys/net/ipv6/conf/all/forwarding ] && echo 1 > /proc/sys/net/ipv6/conf/all/forwarding 2>/dev/null || true
+
+# Enable IP forwarding for subnet routing. Must be a runtime write, not a
+# compose-level 'sysctls:' entry — that's blocked outright under
+# network_mode: host (runc refuses to configure netns sysctls when no new
+# network namespace is being created).
+echo 1 > /proc/sys/net/ipv4/ip_forward 2>/dev/null || true
+[ -e /proc/sys/net/ipv6/conf/all/forwarding ] && echo 1 > /proc/sys/net/ipv6/conf/all/forwarding 2>/dev/null || true
 
 # https://github.com/tailscale/tailscale/blob/main/cmd/containerboot/main.go
 exec /usr/local/bin/containerboot
