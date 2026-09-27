@@ -34,10 +34,16 @@ if [ -z "${TS_AUTH_KEY:-}" ] && [ -z "${TS_AUTHKEY:-}" ]; then
     exit 0
 fi
 
+# WireGuard may be compiled into the kernel rather than a loadable
+# module, in which case modprobe reports failure even though support
+# exists — so don't gate kernel networking on modprobe's exit code.
+modprobe wireguard 2>/dev/null || true
+dmesg | grep -i wireguard || true
+export TS_USERSPACE="${TS_USERSPACE:-false}"
+
 # attempt to load required kernel modules
 # even if we aren't going to use them
 modprobe tun || true
-modprobe wireguard || true
 
 # create device node
 mkdir -p /dev/net
