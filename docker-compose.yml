@@ -1,7 +1,7 @@
 version: "2.1"
 
 volumes:
-  state: {}
+  tailscale-state: {}
   usdata: {}
 
 services:
